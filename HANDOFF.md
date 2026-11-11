@@ -1,7 +1,10 @@
 # Appeals Tracker: Handoff
 
 **For:** Elizabeth, Billing Compliance Manager
-**What you're getting:** a shared web tracker you manage yourself (no Excel editing needed), an Excel workbook kept in sync with it, and a library of copy-paste prompts for your firm's Claude.
+**What you're getting:** a web tracker you manage yourself (no Excel editing needed), a design for keeping an Excel workbook in sync with it, and a library of copy-paste prompts for your firm's Claude.
+
+**Try the demo:** https://joshmay-hcs.github.io/appeals-tracker/
+**Code and files:** https://github.com/joshmay-hcs/appeals-tracker
 **Everything in the demo is fictional.** Carrier names, people, matters, claims and dollar amounts are made up. The billing *rules* come from the five guideline sets you shared.
 
 ---
@@ -10,9 +13,9 @@
 
 | File | What it is | Use it for |
 |---|---|---|
-| `appeals-tracker.html` | The tracker, published as a private link: https://claude.ai/artifact/YPKWZPcsv6iBGkuXPka9Kk | Day-to-day work for you and the billing team. Everyone with access sees the same data. |
-| `Appeals_Tracker.xlsx` | A synced copy of everything in the tracker, with live formulas | Finance reporting, offline review, sending numbers to people who don't use the tracker. |
-| `tools/sync_workbook.py` | The script Claude uses to rebuild the workbook from the tracker | Nothing for you to run. Claude uses it when you ask for a sync. |
+| `index.html` | The demo, live at https://joshmay-hcs.github.io/appeals-tracker/ | Trying everything out. Your changes save only in your own browser, so nothing you do affects anyone else. **Reset to demo data** (Guidelines & Admin > Data & Excel) starts over. |
+| `appeals-tracker.html` | The same app, built to run inside Claude with a shared database | Going live in your firm's Claude (Section 8): everyone with access sees the same data, and the Claude buttons work. |
+| `tools/sync_workbook.py` | The script Claude uses to rebuild the Excel workbook from the tracker's data | Nothing for you to run. Claude uses it when you ask for a sync (Claude-hosted version). |
 | `HANDOFF.md` | This guide | How it works, how to manage it, the prompts, and how to move it into your firm's Claude. |
 
 ---
@@ -67,7 +70,7 @@ In the demo data, preventable and potentially preventable cuts make up most of t
 
 **Guided tour:** opens the first time someone visits (17 short steps). Replay it with **Take the tour** at the top right. Arrow keys move between steps; Esc closes it.
 
-**Claude features inside the page** (Read with Claude, Polish with Claude, Rewrite with Claude, Import from guideline, Training quiz) ask each person for permission the first time they're used. Everything else works without them.
+**Claude features inside the page** (Read with Claude, Polish with Claude, Rewrite with Claude, Import from guideline, Training quiz) appear only in the Claude-hosted version, and ask each person for permission the first time they're used. The GitHub demo hides them; **Copy prompt for Claude** works everywhere. Everything else works without them.
 
 ---
 
@@ -85,7 +88,7 @@ You manage all of the tracker's settings from the **Guidelines & Admin** tab. Yo
 | **Intake mapping** | Which reviewer wording maps to which cut reason (e.g., "previously billed" → Duplicate Billing). Add a row when a report uses wording the tracker doesn't recognize. |
 | **Data & Excel** | **Reset to demo data**, **Clear demo cuts and start fresh**, Excel sync instructions, and a data-privacy reminder. |
 
-**Who can change what.** Access is controlled from the page's **Share** menu:
+**Who can change what** (Claude-hosted version; in the GitHub demo everyone can change everything, in their own browser only). Access is controlled from the page's **Share** menu:
 - **Editor:** can change everything on Guidelines & Admin. Give this to you (and a backup).
 - **Contributor:** can log cuts, draft appeals, add approvals and matters, and mark reports done, but can't change carriers, rules, reasons, timekeepers or mapping.
 - **Viewer:** read-only.
@@ -93,6 +96,8 @@ You manage all of the tracker's settings from the **Guidelines & Admin** tab. Yo
 ---
 
 ## 6. Keeping the Excel workbook in sync
+
+*This applies once the tracker runs in Claude (Section 8). The workbook isn't in the GitHub repo; ask whoever shared this demo with you for a copy built from the demo data.*
 
 The tracker is the source of truth. The workbook is a copy, rebuilt on request.
 
@@ -248,15 +253,15 @@ When you're ready to run it on real data in your firm's Claude organization:
 - **Start clean:** Guidelines & Admin > Data & Excel > **Clear demo cuts and start fresh** (click twice to confirm). Carriers, rules, reasons and timekeepers stay; cuts, matters, approvals and saved appeals are removed.
 - **Carriers:** rename the fictional carriers and set each appeal window. Two windows in the demo are assumptions: Keystone's 30 days (the guideline doesn't state one) and Three Rivers' 14 days. Confirm both.
 - **Timekeepers and rates:** Guidelines & Admin > Timekeepers.
-- **Privacy:** the demo runs on claude.ai. Before entering real claim data, confirm with your firm that its Claude workspace is approved for client billing data. Several carrier guidelines also have AI-use clauses (one says counsel "shall not enter confidential or personal data into AI tools"). Use claim numbers or initials rather than claimant names until that's cleared.
+- **Privacy:** the GitHub demo is public and keeps data only in the visitor's browser. Don't type real client data into it. Before entering real claim data anywhere, confirm with your firm that its Claude workspace is approved for client billing data. Several carrier guidelines also have AI-use clauses (one says counsel "shall not enter confidential or personal data into AI tools"). Use claim numbers or initials rather than claimant names until that's cleared.
 - **Firm name and logo:** the demo deliberately doesn't use the firm's name or logo. Add the firm name under Data & Excel (it shows in the header), and IT can add the logo to the HTML. The colors and fonts already follow the firm's website.
 
 ---
 
 ## Appendix for IT (short)
 
-- **App:** a single HTML file published as a Claude artifact. Vanilla JavaScript; Chart.js 4.4.1 and pdf.js 3.11.174 from cdnjs (pdf.js loads only when a PDF is opened); Google Fonts (Bitter, Roboto, Roboto Mono).
-- **Data:** stored in the artifact's shared database, so everyone with access sees the same records. Collections: `carriers`, `rules` (one document per carrier + topic + effective date), `reportRules`, `reasons`, `timekeepers`, `mapping`, `matters` (with `reportsDone`), `cuts`, `approvals`, `library`, and `meta/settings`. Write access to `carriers`, `rules`, `reportRules`, `reasons`, `timekeepers`, `mapping` and `meta` is limited to Editors; Contributors can write the rest. Only the tour's "seen" flag is stored per browser.
+- **App:** a single HTML file. `index.html` is the standalone demo (demo data embedded, saved per browser in `localStorage` key `appealsTracker.pages.v1`), hosted on GitHub Pages. `appeals-tracker.html` is the Claude-artifact build. Vanilla JavaScript; Chart.js 4.4.1 and pdf.js 3.11.174 from cdnjs (pdf.js loads only when a PDF is opened); Google Fonts (Bitter, Roboto, Roboto Mono).
+- **Data (Claude-hosted):** stored in the artifact's shared database, so everyone with access sees the same records. Collections: `carriers`, `rules` (one document per carrier + topic + effective date), `reportRules`, `reasons`, `timekeepers`, `mapping`, `matters` (with `reportsDone`), `cuts`, `approvals`, `library`, and `meta/settings`. Write access to `carriers`, `rules`, `reportRules`, `reasons`, `timekeepers`, `mapping` and `meta` is limited to Editors; Contributors can write the rest. Only the tour's "seen" flag is stored per browser.
 - **Cut record:** id, n, carrier, platform, matterId, matter, claim, invoice, invDate, redDate, tk, task, activity, narrative, rewrite, hours, rate, billed, allowed, cut, reason, prev, prevOverride, status, round, appealed, recovered, appealText, scope, notes, source. Appeal deadline = redDate + the carrier's appealDays. Rule lookup uses the latest version with effective date on or before the invoice date.
 - **Written off / pending:** Fully Restored → 0 written off; Partially Restored → cut − recovered; Denied or Accepted → cut − recovered; anything else is pending.
 - **Workbook sync:** Claude exports each collection to JSON and runs `tools/sync_workbook.py <export_dir> <out.xlsx>` (Python 3 + openpyxl), then recalculates in Excel. INDEX/MATCH and SUMIFS only, so it works in Excel 2010+. Last sync: 7,267 formulas, 0 errors, totals matching the tracker.
