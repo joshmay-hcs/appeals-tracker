@@ -1,0 +1,4 @@
+# Source documents and workbooks stay out of the repo
+*.pdf
+*.xlsx
+*.xls
